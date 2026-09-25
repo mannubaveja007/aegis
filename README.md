@@ -37,38 +37,38 @@ Most agent demos never test for this. They assume clean inputs and grade on the 
 
 ```mermaid
 flowchart TB
-    subgraph INPUT["🔵 Input Layer"]
-        USER["👤 User / Webhook"]
-        PROMPT["Refund Request<br/><i>(untrusted text)</i>"]
+    subgraph Input
+        USER["User / Webhook"]
+        REQUEST["Refund Request\n(untrusted text)"]
     end
 
-    subgraph AGENT["🧠 Agent Layer"]
+    subgraph Agent
         direction TB
-        REASONER["<b>Reasoner</b><br/>Claude Sonnet 4<br/>• Reads charge + customer text<br/>• Assesses risk level<br/>• Decides action plan"]
-        RESPONDER["<b>Responder</b><br/>• Drafts customer email<br/>• Composes Jira ticket<br/>• Writes Slack summary"]
+        REASONER["Reasoner\nClaude Sonnet 4\n─────────────────\nReads charge + customer text\nAssesses risk level\nDecides action plan"]
+        RESPONDER["Responder\n─────────────────\nDrafts customer email\nComposes Jira ticket\nWrites Slack summary"]
     end
 
-    subgraph SWYTCHCODE["⚡ Swytchcode Execution Layer"]
+    subgraph Swytchcode
         direction TB
-        POLICY["🔒 <b>Policy Layer</b><br/><code>policies.json</code><br/>• Amount > $100 → DENY<br/>• Risk elevated/highest → DENY<br/><i>Model cannot override</i>"]
-        RUNTIME["<b>Runtime</b><br/>Auth injection · Retries<br/>Idempotency · Schema validation"]
+        POLICY["Policy Gate\npolicies.json\n─────────────────\nAmount > $100 → DENY\nRisk elevated/highest → DENY\nModel cannot override"]
+        RUNTIME["Runtime\n─────────────────\nManaged auth · Retries\nIdempotency · Validation"]
     end
 
-    subgraph SERVICES["🌐 External Services"]
+    subgraph Services
         direction LR
-        STRIPE["<img src='https://cdn.simpleicons.org/stripe/635BFF' width='16'/> <b>Stripe</b><br/>Charge + Risk Signal<br/>Refund Execution"]
-        JIRA["<img src='https://cdn.simpleicons.org/jira/0052CC' width='16'/> <b>Jira</b><br/>Ticket Creation<br/>Routine / Escalated"]
-        GMAIL["<img src='https://cdn.simpleicons.org/gmail/EA4335' width='16'/> <b>Gmail</b><br/>Customer Draft<br/>Case-specific reply"]
-        SLACK["<img src='https://cdn.simpleicons.org/slack/4A154B' width='16'/> <b>Slack</b><br/>Ops Notification<br/>Log / Alert"]
-        NOTION["<img src='https://cdn.simpleicons.org/notion/fff' width='16'/> <b>Notion</b><br/>Audit Trail<br/>Every decision logged"]
+        STRIPE["Stripe\nCharge + Risk Signal\nRefund Execution"]
+        JIRA["Jira\nTicket Creation"]
+        GMAIL["Gmail\nCustomer Draft"]
+        SLACK["Slack\nOps Notification"]
+        NOTION["Notion\nAudit Trail"]
     end
 
-    USER --> PROMPT
-    PROMPT --> REASONER
+    USER --> REQUEST
+    REQUEST --> REASONER
     REASONER --> RESPONDER
-    RESPONDER -->|"Tool calls"| POLICY
-    POLICY -->|"✅ Allowed"| RUNTIME
-    POLICY -->|"🚫 Blocked"| AUDIT_LOG["Blocked action<br/>logged to Notion"]
+    RESPONDER -- "tool calls" --> POLICY
+    POLICY -- "allowed" --> RUNTIME
+    POLICY -. "denied" .-> BLOCKED["Action blocked\nlogged to audit trail"]
     RUNTIME --> STRIPE
     RUNTIME --> JIRA
     RUNTIME --> GMAIL
@@ -82,12 +82,12 @@ flowchart TB
     classDef service fill:#111827,stroke:#374151,color:#e8e8f0
     classDef blocked fill:#2d1a1a,stroke:#f59e0b,color:#fbbf24
 
-    class USER,PROMPT input
+    class USER,REQUEST input
     class REASONER,RESPONDER agent
     class RUNTIME swytch
     class POLICY policy
     class STRIPE,JIRA,GMAIL,SLACK,NOTION service
-    class AUDIT_LOG blocked
+    class BLOCKED blocked
 ```
 
 ---
