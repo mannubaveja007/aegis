@@ -5,7 +5,6 @@ import { zodSchema } from "@ai-sdk/provider-utils";
 import type { SanitizedCase, AgentStep } from "@/types/aegis";
 import { getOrderStatus } from "@/lib/tools/billbee";
 import { getEvent, issueRefund } from "@/lib/tools/stripe";
-import { createTicket } from "@/lib/tools/jira";
 import { sendDraft } from "@/lib/tools/gmail";
 import { postMessage } from "@/lib/tools/slack";
 import { createLogEntry } from "@/lib/tools/notion";
@@ -84,21 +83,6 @@ export async function runReasoner(
         },
       }),
 
-      "jira.createTicket": makeTool({
-        description:
-          "Create a Jira ticket to track this case. Always call regardless of refund outcome.",
-        schema: z.object({
-          summary: z.string().describe("Ticket summary"),
-          description: z.string().describe("Ticket description with case details"),
-          priority: z.enum(["Low", "Medium", "High", "Critical"]).describe("Priority level"),
-        }),
-        run: async (input) => {
-          onStep({ type: "tool_call", tool: "jira.createTicket", input });
-          const out = await createTicket(input);
-          onStep({ type: "tool_result", tool: "jira.createTicket", output: out });
-          return out;
-        },
-      }),
 
       "gmail.sendDraft": makeTool({
         description:
