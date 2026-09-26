@@ -40,6 +40,7 @@ export async function runReasoner(
 
   const generateConfig = {
     model: openrouter("google/gemini-2.5-flash"),
+    maxTokens: 4096,
     system: SYSTEM_PROMPT,
     prompt: `sanitized_case: ${JSON.stringify(sanitized)}`,
     stopWhen: stepCountIs(12),

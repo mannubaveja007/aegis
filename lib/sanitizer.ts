@@ -30,6 +30,7 @@ const sanitizedCaseSchema = z.object({
 export async function sanitize(rawText: string): Promise<SanitizedCase> {
   const { object } = await generateObject({
     model: openrouter("google/gemini-2.5-flash"),
+    maxTokens: 2048,
     schema: sanitizedCaseSchema,
     system: SYSTEM_PROMPT,
     prompt: rawText,
