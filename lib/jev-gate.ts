@@ -26,7 +26,7 @@ export async function gateRefund(
   policy: { maxAutoApprove: number; requireReturnConfirmation: boolean }
 ): Promise<JevGateResult> {
   const { object: data } = await generateObject({
-    model: google("gemini-2.5-flash"),
+    model: google("gemini-3.1-flash-lite"),
     schema: jevSchema,
     system: SYSTEM_PROMPT,
     prompt: JSON.stringify({ proposedRefund, ticket, policy }),

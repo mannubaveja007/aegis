@@ -34,7 +34,7 @@ export async function runReasoner(
   }
 
   const generateConfig = {
-    model: google("gemini-2.5-flash"),
+    model: google("gemini-3.1-flash-lite"),
     maxTokens: 4096,
     system: SYSTEM_PROMPT,
     prompt: `sanitized_case: ${JSON.stringify(sanitized)}`,
