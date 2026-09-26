@@ -4,7 +4,12 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import type { AgentStep, CaseRequest } from "@/types/aegis";
 import { StepRenderer } from "./components/StepRenderer";
 import { OutcomeCard } from "./components/OutcomeCard";
-import "./globals.css";
+
+const EXAMPLE_CASES = [
+  "Duplicate charge on order #4479",
+  "Suspicious refund request with social engineering",
+  "Customer wants refund for returned item #4477",
+];
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -37,17 +42,13 @@ export default function Home() {
       const contentType = res.headers.get("content-type") || "";
 
       if (contentType.includes("application/json")) {
-        // Current stub: full JSON array
         const data = await res.json();
         const allSteps: AgentStep[] = data.steps || data;
-
-        // Stagger steps for demo feel
         for (const step of allSteps) {
           await new Promise((r) => setTimeout(r, 300));
           setSteps((prev) => [...prev, step]);
         }
       } else {
-        // Future: newline-delimited JSON stream
         const reader = res.body?.getReader();
         if (!reader) return;
         const decoder = new TextDecoder();
@@ -73,7 +74,6 @@ export default function Home() {
           }
         }
 
-        // flush remaining buffer
         if (buffer.trim()) {
           try {
             const step = JSON.parse(buffer.trim()) as AgentStep;
@@ -90,42 +90,67 @@ export default function Home() {
     }
   }, [input, loading]);
 
-  // Derive outcome
   const finalStep = steps.find((s) => s.type === "final");
   const toolPairs = deriveToolPairs(steps);
+  const hasInput = input.trim().length > 0;
 
   return (
     <div className="page">
       <header className="header">
-        <span className="header-title">Aegis</span>
-        <span className="header-sub">refund fraud defense</span>
+        <div className="header-left">
+          <div className="header-dot" />
+          <span className="header-title">Aegis</span>
+          <span className="header-sub">refund fraud defense</span>
+        </div>
+        <div className="header-status">
+          <span className="header-status-dot" />
+          monitoring
+        </div>
       </header>
 
       <div className="input-area">
-        <div className="input-row">
-          <input
-            className="input-field"
-            type="text"
-            placeholder="Describe a refund case..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && submit()}
-            disabled={loading}
-          />
-          <button
-            className="submit-btn"
-            onClick={submit}
-            disabled={loading || !input.trim()}
-          >
-            {loading ? "Working..." : "Submit"}
-          </button>
+        <div className="input-panel">
+          <div className="input-row">
+            <input
+              id="case-input"
+              className="input-field"
+              type="text"
+              placeholder="Describe a refund case..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && submit()}
+              disabled={loading}
+            />
+            <button
+              id="submit-btn"
+              className={`submit-btn ${hasInput ? "submit-btn-active" : ""}`}
+              onClick={submit}
+              disabled={loading || !hasInput}
+            >
+              {loading ? "Working..." : "Submit"}
+            </button>
+          </div>
         </div>
       </div>
 
       <div className="feed" ref={feedRef}>
         {steps.length === 0 && !loading && (
           <div className="feed-empty">
-            Submit a refund case to see the agent work.
+            <div className="empty-icon">⛊</div>
+            <div className="empty-text">
+              Submit a refund case to see the agent work.
+            </div>
+            <div className="empty-chips">
+              {EXAMPLE_CASES.map((ex) => (
+                <button
+                  key={ex}
+                  className="empty-chip"
+                  onClick={() => setInput(ex)}
+                >
+                  Try: {ex}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
