@@ -3,20 +3,24 @@
 
 import { exec } from "@swytchcode/runtime";
 
+// Default ops channel — #aegis-ops
+const OPS_CHANNEL = process.env.SLACK_OPS_CHANNEL || "C0C5H1FQZJL";
+
 export async function postMessage(input: unknown): Promise<unknown> {
-  // slack.chat.postmessage.create — POST /chat.postMessage
-  // Required: body.channel
-  // Optional: body.text, body.blocks, body.mrkdwn, ...
   const { channel, text } = input as {
     channel: string;
     text: string;
   };
 
+  // Resolve channel: if it looks like a name, use the env var fallback
+  const channelId = channel.startsWith("C") ? channel : OPS_CHANNEL;
+
+  // Returns: { data: { ok: boolean, channel: string, ts: string, message: {...} } }
   const result = await exec("slack.chat.postmessage.create", {
     body: {
-      channel,
+      channel: channelId,
       text,
-      mrkdwn: true,
+      mrkdwn: "true",
     },
   });
 

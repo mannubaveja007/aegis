@@ -2318,6 +2318,144 @@
       "summary": "Sends a message to a channel.",
       "type": "method"
     },
+    "slack.conversations.join.create": {
+      "desc": "Joins an existing conversation.",
+      "inputs": [
+        {
+          "token": {
+            "LOCATION": "header",
+            "REQUIRED": false,
+            "TYPE": "STRING"
+          }
+        },
+        {
+          "body": {
+            "LOCATION": "body",
+            "REQUIRED": false,
+            "TYPE": "OBJECT",
+            "schema": {
+              "properties": {
+                "channel": {
+                  "required": false,
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "integration": "Slack.slack@1.7.0",
+      "method_hash": "9a822b13db4943c114188f69dc88a98e304aa54758c3d7923b0b755f80244aa9",
+      "output": {
+        "schema": {
+          "properties": {
+            "channel": {
+              "required": true,
+              "type": "any"
+            },
+            "ok": {
+              "required": true,
+              "type": "boolean"
+            },
+            "response_metadata": {
+              "properties": {
+                "warnings": {
+                  "required": false,
+                  "type": "[]STRING"
+                }
+              },
+              "type": "object"
+            },
+            "warning": {
+              "required": false,
+              "type": "string"
+            }
+          },
+          "required": [
+            "channel",
+            "ok"
+          ]
+        },
+        "status": 200
+      },
+      "summary": "Joins an existing conversation.",
+      "type": "method"
+    },
+    "slack.conversations.list.list": {
+      "desc": "Lists all channels in a Slack team.",
+      "inputs": [
+        {
+          "token": {
+            "LOCATION": "query",
+            "REQUIRED": false,
+            "TYPE": "STRING"
+          }
+        },
+        {
+          "exclude_archived": {
+            "LOCATION": "query",
+            "REQUIRED": false,
+            "TYPE": "BOOL"
+          }
+        },
+        {
+          "types": {
+            "LOCATION": "query",
+            "REQUIRED": false,
+            "TYPE": "STRING"
+          }
+        },
+        {
+          "limit": {
+            "LOCATION": "query",
+            "REQUIRED": false,
+            "TYPE": "INT"
+          }
+        },
+        {
+          "cursor": {
+            "LOCATION": "query",
+            "REQUIRED": false,
+            "TYPE": "STRING"
+          }
+        }
+      ],
+      "integration": "Slack.slack@1.7.0",
+      "method_hash": "7339356ba4def8ac70b52d45ddbd05d1c46e02cb4a37a4b800e326e6c0becf04",
+      "output": {
+        "schema": {
+          "properties": {
+            "channels": {
+              "required": true,
+              "type": "[]ANY"
+            },
+            "ok": {
+              "required": true,
+              "type": "boolean"
+            },
+            "response_metadata": {
+              "properties": {
+                "next_cursor": {
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "next_cursor"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "channels",
+            "ok"
+          ]
+        },
+        "status": 200
+      },
+      "summary": "Lists all channels in a Slack team.",
+      "type": "method"
+    },
     "stripe.charge.get": {
       "desc": "\u003cp\u003eRetrieves the details of a charge that has previously been created. Supply the unique charge ID that was returned from your previous request, and Stripe will return the corresponding charge information. The same information is returned when creating or refunding the charge.\u003c/p\u003e",
       "inputs": [
