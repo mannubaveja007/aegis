@@ -93,7 +93,7 @@ export function InfrastructureSection() {
                 style={{ pointerEvents: "none" }}
               >
                 <defs>
-                  <style>{`
+                  <style suppressHydrationWarning>{`
                     @keyframes drawLine {
                       0%   { stroke-dashoffset: 1000; opacity: 0; }
                       15%  { opacity: 1; }
