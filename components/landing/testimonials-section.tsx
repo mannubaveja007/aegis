@@ -80,10 +80,10 @@ export function TestimonialsSection() {
   return (
     <section ref={sectionRef} className="relative py-32 lg:py-40 bg-foreground text-background overflow-hidden">
       {/* ASCII background pattern */}
-      <div className="absolute inset-0 font-mono text-[10px] text-background/[0.02] leading-tight overflow-hidden whitespace-pre select-none">
+      <div className="absolute inset-0 font-mono text-[10px] text-background/[0.02] leading-tight overflow-hidden whitespace-pre select-none" aria-hidden="true">
         {Array.from({ length: 60 }, (_, i) => 
-          Array.from({ length: 100 }, () => 
-            Math.random() > 0.7 ? '"' : ' '
+          Array.from({ length: 100 }, (_, j) => 
+            ((i * 7 + j * 13 + i * j) % 10) > 6 ? '"' : ' '
           ).join("")
         ).join("\n")}
       </div>
