@@ -1,5 +1,10 @@
 import { generateObject } from "ai";
-import { google } from "@ai-sdk/google";
+import { createOpenAI } from "@ai-sdk/openai";
+
+const openrouter = createOpenAI({
+  baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.OPENROUTER_API_KEY,
+});
 import { z } from "zod";
 import type { SanitizedCase } from "@/types/aegis";
 
@@ -24,7 +29,7 @@ const sanitizedCaseSchema = z.object({
 
 export async function sanitize(rawText: string): Promise<SanitizedCase> {
   const { object } = await generateObject({
-    model: google("gemini-3.8-flash"),
+    model: openrouter("google/gemini-2.5-flash"),
     schema: sanitizedCaseSchema,
     system: SYSTEM_PROMPT,
     prompt: rawText,

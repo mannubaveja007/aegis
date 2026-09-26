@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.82",
+    "@ai-sdk/openai": "^4.0.78",
     "@swytchcode/runtime": "^1.1.6",
     "ai": "^7.0.116",
     "geist": "^1.7.2",

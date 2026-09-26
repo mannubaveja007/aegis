@@ -1,5 +1,10 @@
 import { generateText, tool, stepCountIs } from "ai";
-import { google } from "@ai-sdk/google";
+import { createOpenAI } from "@ai-sdk/openai";
+
+const openrouter = createOpenAI({
+  baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.OPENROUTER_API_KEY,
+});
 import { z } from "zod";
 import { zodSchema } from "@ai-sdk/provider-utils";
 import type { SanitizedCase, AgentStep } from "@/types/aegis";
@@ -34,7 +39,7 @@ export async function runReasoner(
   }
 
   const generateConfig = {
-    model: google("gemini-3.8-flash"),
+    model: openrouter("google/gemini-2.5-flash"),
     system: SYSTEM_PROMPT,
     prompt: `sanitized_case: ${JSON.stringify(sanitized)}`,
     stopWhen: stepCountIs(12),
