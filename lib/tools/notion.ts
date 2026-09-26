@@ -1,12 +1,12 @@
 // Notion tools — Swytchcode Runtime SDK
 // Auth: managed (oauth2) — credentials injected by the CLI
-// Appends audit log entries as blocks to an existing Notion page
+// Adds rows to the "Orders Ledger" database in the Company ledger page
 
 import { exec } from "@swytchcode/runtime";
 
 export async function createLogEntry(input: unknown): Promise<unknown> {
-  // notion.children.update — PATCH /v1/blocks/{block_id}/children
-  // Appends paragraph blocks to the page the user already shared with Notion+Swytchcode
+  // notion.page.create — POST /v1/pages
+  // Creates a new row in the Orders Ledger database
   const { case_id, risk_tier, action, policy_result, injection_flagged } =
     input as {
       case_id: string;
@@ -16,34 +16,57 @@ export async function createLogEntry(input: unknown): Promise<unknown> {
       injection_flagged: boolean;
     };
 
-  const pageId = process.env.NOTION_AUDIT_PAGE_ID;
-  if (!pageId) {
+  const dbId = process.env.NOTION_AUDIT_DB_ID;
+  if (!dbId) {
     throw new Error(
-      "NOTION_AUDIT_PAGE_ID is not set. Set it to the ID of the Notion page shared with the integration."
+      "NOTION_AUDIT_DB_ID is not set. Set it to the Orders Ledger database ID."
     );
   }
 
-  const timestamp = new Date().toISOString();
-  const injectionTag = injection_flagged ? " 🚨 INJECTION FLAGGED" : "";
+  // Map policy_result to Order Status values in the database
+  const statusMap: Record<string, string> = {
+    approve: "Confirmed",
+    block: "Cancelled",
+    blocked: "Cancelled",
+    review: "Processing",
+  };
 
-  const logLine = `[${timestamp}] Case: ${case_id} | Risk: ${risk_tier} | Action: ${action} | Policy: ${policy_result}${injectionTag}`;
+  // Map policy_result to Payment Status
+  const paymentStatusMap: Record<string, string> = {
+    approve: "Refunded",
+    block: "Failed",
+    blocked: "Failed",
+    review: "Pending",
+  };
 
-  const result = await exec("notion.children.update", {
-    block_id: pageId,
+  const result = await exec("notion.page.create", {
     body: {
-      children: [
-        {
-          type: "paragraph",
-          paragraph: {
-            rich_text: [
-              {
-                type: "text",
-                text: { content: logLine },
-              },
-            ],
+      parent: { database_id: dbId },
+      properties: {
+        Order: {
+          title: [{ text: { content: `Case #${case_id}` } }],
+        },
+        "Order Status": {
+          status: { name: statusMap[policy_result] || "Processing" },
+        },
+        "Payment Status": {
+          select: {
+            name: paymentStatusMap[policy_result] || "Pending",
           },
         },
-      ],
+        Notes: {
+          rich_text: [
+            {
+              text: {
+                content: `[${risk_tier.toUpperCase()}] ${action}${injection_flagged ? " 🚨 INJECTION DETECTED" : ""}`,
+              },
+            },
+          ],
+        },
+        "Priority Order": {
+          checkbox: risk_tier === "high" || injection_flagged,
+        },
+      },
     },
   });
 
