@@ -46,7 +46,7 @@ const plans = [
       "SLA guarantee",
       "Custom LLM routing",
       "Advanced security",
-      "Dedicated compute",
+      "Dedicated support",
     ],
     cta: "Contact sales",
     highlight: false,

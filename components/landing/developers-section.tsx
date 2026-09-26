@@ -17,7 +17,7 @@ const features = [
   },
   { 
     title: "Local debugging", 
-    description: "Test agents locally before deploying to cloud."
+    description: "Test refund cases locally before going live."
   },
 ];
 

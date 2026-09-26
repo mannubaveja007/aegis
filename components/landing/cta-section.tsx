@@ -58,8 +58,8 @@ export function CtaSection() {
                 </h2>
 
                 <p className="text-xl text-muted-foreground mb-12 leading-relaxed max-w-xl">
-                  Join teams automating complex workflows with COMPUTE agents. 
-                  Deploy your first agent in minutes.
+                  See how Aegis catches manipulation attempts in real time. 
+                  Submit a refund case and watch the pipeline work.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-start gap-4">
@@ -84,7 +84,7 @@ export function CtaSection() {
                 </div>
 
                 <p className="text-sm text-muted-foreground mt-8 font-mono">
-                  1,000 free tasks with COMPUTE
+                  Try the live demo — no signup needed
                 </p>
               </div>
 

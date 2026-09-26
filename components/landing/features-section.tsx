@@ -5,27 +5,27 @@ import { useEffect, useRef, useState } from "react";
 const features = [
   {
     number: "01",
-    title: "Autonomous Execution",
-    description: "Deploy AI agents that work independently. They analyze, decide, and execute complex multi-step tasks without human intervention.",
-    stats: { value: "99.7%", label: "task completion" },
+    title: "Order Verification",
+    description: "Cross-references every order against Billbee before any decision is made. No order data, no refund.",
+    stats: { value: "100%", label: "orders verified" },
   },
   {
     number: "02",
-    title: "Distributed Computing",
-    description: "Offload compute-heavy tasks to our global network. Your agents run on optimized infrastructure across 50+ regions worldwide.",
-    stats: { value: "50+", label: "global regions" },
+    title: "Payment Risk Analysis",
+    description: "Pulls real Stripe charge data and evaluates refund eligibility through the Jev policy engine. Every cent is accounted for.",
+    stats: { value: "4", label: "risk signals" },
   },
   {
     number: "03",
-    title: "Multi-Agent Orchestration",
-    description: "Coordinate teams of specialized agents. They communicate, delegate, and collaborate to solve complex problems together.",
-    stats: { value: "1000x", label: "parallel execution" },
+    title: "Injection Detection",
+    description: "Catches prompt injection, social engineering, and manipulation attempts before they reach the reasoning layer.",
+    stats: { value: "0", label: "successful attacks" },
   },
   {
     number: "04",
-    title: "Secure Sandboxing",
-    description: "Each agent runs in isolated environments. Full audit trails, encrypted execution, and zero data leakage between tasks.",
-    stats: { value: "0", label: "data breaches" },
+    title: "Policy-Gated Refunds",
+    description: "Jev Gate blocks refunds that fail suspicious, matchesTicket, or withinPolicy thresholds. Full audit trail on every decision.",
+    stats: { value: "100%", label: "gated decisions" },
   },
 ];
 
@@ -165,16 +165,16 @@ export function FeaturesSection() {
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
                 }`}
               >
-                Intelligent
+                Autonomous
                 <br />
-                <span className="text-muted-foreground">workers.</span>
+                <span className="text-muted-foreground">defense.</span>
               </h2>
             </div>
             <div className="lg:col-span-5 lg:pb-4">
               <p className={`text-xl text-muted-foreground leading-relaxed transition-all duration-1000 delay-200 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}>
-                Deploy autonomous AI agents that execute complex tasks across distributed infrastructure. No supervision required.
+                Every refund case is verified, risk-scored, and policy-gated before a single cent moves. No human in the loop.
               </p>
             </div>
           </div>

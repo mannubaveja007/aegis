@@ -44,7 +44,7 @@ export function InfrastructureSection() {
             isVisible ? "opacity-100" : "opacity-0"
           }`}>
             <span className="w-12 h-px bg-foreground/20" />
-            Global infrastructure
+            Defense infrastructure
           </span>
           
           <div className="grid lg:grid-cols-[auto_1fr] gap-8 lg:gap-16 items-stretch">
@@ -72,7 +72,7 @@ export function InfrastructureSection() {
               <p className={`mt-8 text-xl text-muted-foreground leading-relaxed max-w-lg transition-all duration-1000 delay-100 ${
                 isVisible ? "opacity-100" : "opacity-0"
               }`}>
-                Your agents run on distributed infrastructure across 29 regions.
+                Every tool call is routed through Swytchcode and gated by Jev policy.
                 Sub-50ms latency to 99% of the world.
               </p>
             </div>
@@ -148,7 +148,7 @@ export function InfrastructureSection() {
                 <span className="text-2xl text-muted-foreground">regions</span>
               </div>
               <p className="text-muted-foreground max-w-md">
-                Compute nodes distributed globally for maximum redundancy and minimum latency.
+                Tool calls flow through Stripe, Billbee, Gmail, Notion, and Slack — each call policy-gated and audited.
               </p>
             </div>
           </div>

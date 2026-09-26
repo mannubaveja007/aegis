@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const testimonials = [
   {
-    quote: "Our agents handle 80% of our customer support tickets autonomously. The ROI was immediate.",
+    quote: "Aegis caught 3 injection attempts in the first week. The policy gate blocked every one before money moved.",
     author: "Sarah Chen",
     role: "CTO",
     company: "Meridian Labs",
