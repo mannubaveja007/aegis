@@ -44,7 +44,7 @@ flowchart TB
 
     subgraph Agent
         direction TB
-        REASONER["Reasoner\nClaude Sonnet 4\n─────────────────\nReads charge + customer text\nAssesses risk level\nDecides action plan"]
+        REASONER["Reasoner\nGemini\n─────────────────\nReads charge + customer text\nAssesses risk level\nDecides action plan"]
         RESPONDER["Responder\n─────────────────\nDrafts customer email\nComposes Jira ticket\nWrites Slack summary"]
     end
 
@@ -157,7 +157,7 @@ All execution runs through **Swytchcode**, which handles auth, retries, idempote
   </tr>
   <tr>
     <td align="center"><b>Agent</b></td>
-    <td>Vercel AI SDK · Anthropic Claude Sonnet 4</td>
+    <td>Google AI SDK · Gemini</td>
   </tr>
   <tr>
     <td align="center"><b>Execution</b></td>
@@ -183,7 +183,7 @@ npm install
 
 # Configure LLM
 cp .env.example .env
-# Add your ANTHROPIC_API_KEY
+# Add your GEMINI_API_KEY
 
 # Connect services through Swytchcode
 swy auth connect stripe
