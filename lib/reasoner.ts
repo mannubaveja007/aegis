@@ -34,7 +34,7 @@ export async function runReasoner(
     onStep({ type: "injection_flag", span: sanitized.injection_span });
   }
 
-  const result = await generateText({
+  const generateConfig = {
     model: google("gemini-3.8-flash"),
     system: SYSTEM_PROMPT,
     prompt: `sanitized_case: ${JSON.stringify(sanitized)}`,
@@ -150,13 +150,40 @@ export async function runReasoner(
       }),
     },
 
-    onStepFinish({ text }) {
+    onStepFinish({ text }: { text: string }) {
       if (text) {
         onStep({ type: "reasoning", text });
       }
     },
-  });
+  };
 
-  const finalText = result.text || "Case processed. All actions completed.";
+  // Retry wrapper — gemini-3.8-flash sometimes returns empty candidates
+  // during multi-step tool calling, which the SDK rejects.
+  let result;
+  const MAX_ATTEMPTS = 3;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      result = await generateText(generateConfig);
+      break;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      const isEmptyOutput = msg.includes("model output") && msg.includes("empty");
+      const isRateLimit = msg.includes("quota") || msg.includes("rate") || msg.includes("429");
+      const isRetryable = isEmptyOutput || isRateLimit;
+
+      if (isRetryable && attempt < MAX_ATTEMPTS) {
+        const delay = attempt * 5000;
+        onStep({
+          type: "reasoning",
+          text: `Model hiccup (attempt ${attempt}/${MAX_ATTEMPTS}), retrying in ${delay / 1000}s...`,
+        });
+        await new Promise((r) => setTimeout(r, delay));
+        continue;
+      }
+      throw err;
+    }
+  }
+
+  const finalText = result?.text || "Case processed. All actions completed.";
   onStep({ type: "final", summary: finalText });
 }
