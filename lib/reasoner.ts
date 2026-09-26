@@ -35,7 +35,7 @@ export async function runReasoner(
   }
 
   const result = await generateText({
-    model: google("gemini-2.0-flash"),
+    model: google("gemini-3.8-flash"),
     system: SYSTEM_PROMPT,
     prompt: `sanitized_case: ${JSON.stringify(sanitized)}`,
     stopWhen: stepCountIs(12),

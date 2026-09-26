@@ -24,7 +24,7 @@ const sanitizedCaseSchema = z.object({
 
 export async function sanitize(rawText: string): Promise<SanitizedCase> {
   const { object } = await generateObject({
-    model: google("gemini-2.0-flash"),
+    model: google("gemini-3.8-flash"),
     schema: sanitizedCaseSchema,
     system: SYSTEM_PROMPT,
     prompt: rawText,
