@@ -756,6 +756,187 @@
       "summary": "Create issue",
       "type": "method"
     },
+    "notion.children.update": {
+      "desc": "",
+      "inputs": [
+        {
+          "block_id": {
+            "LOCATION": "path",
+            "REQUIRED": true,
+            "TYPE": "STRING"
+          }
+        },
+        {
+          "Notion-Version": {
+            "DEFAULT": "2025-09-03",
+            "LOCATION": "header",
+            "REQUIRED": false,
+            "TYPE": "STRING"
+          }
+        },
+        {
+          "body": {
+            "CONTENT_TYPE": "application/json",
+            "LOCATION": "body",
+            "REQUIRED": false,
+            "TYPE": "OBJECT",
+            "schema": {
+              "properties": {
+                "after": {
+                  "required": false,
+                  "type": "string"
+                },
+                "children": {
+                  "items": {
+                    "properties": {
+                      "_COMPOSITION": {
+                        "required": false,
+                        "type": "ANY_OF"
+                      },
+                      "variant_bulletedListItemBlockRequest": {
+                        "properties": {
+                          "bulleted_list_item": {
+                            "properties": {
+                              "rich_text": {
+                                "items": {
+                                  "properties": {
+                                    "text": {
+                                      "properties": {
+                                        "content": {
+                                          "required": true,
+                                          "type": "string"
+                                        },
+                                        "link": {
+                                          "properties": {
+                                            "url": {
+                                              "required": true,
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "url"
+                                          ],
+                                          "type": "object"
+                                        }
+                                      },
+                                      "required": [
+                                        "content"
+                                      ],
+                                      "type": "object"
+                                    },
+                                    "type": {
+                                      "required": false,
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "text"
+                                  ],
+                                  "type": "object"
+                                },
+                                "required": true,
+                                "type": "array"
+                              }
+                            },
+                            "required": [
+                              "rich_text"
+                            ],
+                            "type": "object"
+                          },
+                          "type": {
+                            "required": false,
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "variant_paragraphBlockRequest": {
+                        "properties": {
+                          "paragraph": {
+                            "properties": {
+                              "rich_text": {
+                                "items": {
+                                  "properties": {
+                                    "text": {
+                                      "properties": {
+                                        "content": {
+                                          "required": true,
+                                          "type": "string"
+                                        },
+                                        "link": {
+                                          "properties": {
+                                            "url": {
+                                              "required": true,
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "url"
+                                          ],
+                                          "type": "object"
+                                        }
+                                      },
+                                      "required": [
+                                        "content"
+                                      ],
+                                      "type": "object"
+                                    },
+                                    "type": {
+                                      "required": false,
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "text"
+                                  ],
+                                  "type": "object"
+                                },
+                                "required": true,
+                                "type": "array"
+                              }
+                            },
+                            "required": [
+                              "rich_text"
+                            ],
+                            "type": "object"
+                          },
+                          "type": {
+                            "required": false,
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "required": true,
+                  "type": "array"
+                }
+              },
+              "required": [
+                "children"
+              ]
+            }
+          }
+        }
+      ],
+      "integration": "Notion.notion@2.0.0",
+      "method_hash": "8601dd17f146f0c41c3d7495577a949e1431aaed3deaa4a7dff288b254e970f7",
+      "output": {
+        "schema": {
+          "properties": {
+            "value": {
+              "required": false,
+              "type": "any"
+            }
+          }
+        },
+        "status": 200
+      },
+      "summary": "Append block children",
+      "type": "method"
+    },
     "notion.page.create": {
       "desc": "",
       "inputs": [
