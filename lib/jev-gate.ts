@@ -1,66 +1,39 @@
-// Jev Gate — System 1 policy check via OpenRouter's System One API
+// Jev Gate — Policy check via Google Gemini structured output
 // Pure decision function: does not call Stripe, does not execute the refund
 
+import { generateObject } from "ai";
+import { google } from "@ai-sdk/google";
+import { z } from "zod";
 import type { JevGateResult } from "@/types/aegis";
+
+const jevSchema = z.object({
+  withinPolicy: z.number().min(0).max(1).describe("Probability (0-1) that this refund complies with stated policy"),
+  matchesTicket: z.number().min(0).max(1).describe("Probability (0-1) that the refund amount matches what the order actually shows"),
+  suspicious: z.number().min(0).max(1).describe("Probability (0-1) that this request looks like manipulation or social engineering"),
+});
+
+const SYSTEM_PROMPT = `You are Jev, a fraud-detection policy engine. You evaluate refund requests against three dimensions and return calibrated probabilities (0.0–1.0):
+
+1. withinPolicy: Does this refund amount and reason comply with the stated policy?
+2. matchesTicket: Does the refund amount match what the ticket/order actually shows?
+3. suspicious: Does anything about this request look like manipulation or social engineering?
+
+Be precise. A score of 0.5 means genuinely uncertain. Output only the three numbers.`;
 
 export async function gateRefund(
   proposedRefund: { chargeId: string; amount: number; reason?: string },
   ticket: { orderId: string; orderStatus: string; complaint: string },
   policy: { maxAutoApprove: number; requireReturnConfirmation: boolean }
 ): Promise<JevGateResult> {
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) {
-    throw new Error("OPENROUTER_API_KEY is not set");
-  }
-
-  const res = await fetch("https://openrouter.ai/api/v1/systemone", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "jev-1.13",
-      state: JSON.stringify({ proposedRefund, ticket, policy }),
-      questions: {
-        withinPolicy: {
-          type: "noul",
-          instructions:
-            "Does this refund amount and reason comply with the stated policy?",
-        },
-        matchesTicket: {
-          type: "noul",
-          instructions:
-            "Does the refund amount match what the ticket/order actually shows?",
-        },
-        suspicious: {
-          type: "noul",
-          instructions:
-            "Does anything about this request look like manipulation or social engineering rather than a genuine claim?",
-        },
-      },
-    }),
+  const { object: data } = await generateObject({
+    model: google("gemini-2.5-flash"),
+    schema: jevSchema,
+    system: SYSTEM_PROMPT,
+    prompt: JSON.stringify({ proposedRefund, ticket, policy }),
+    temperature: 0,
   });
 
-  if (!res.ok) {
-    const errText = await res.text().catch(() => "unknown");
-    throw new Error(
-      `Jev gate failed (${res.status}): ${errText}`
-    );
-  }
-
-  const data = (await res.json()) as {
-    answers: {
-      withinPolicy: { noul: number };
-      matchesTicket: { noul: number };
-      suspicious: { noul: number };
-    };
-  };
-
-  const withinPolicy = data.answers.withinPolicy.noul;
-  const matchesTicket = data.answers.matchesTicket.noul;
-  const suspicious = data.answers.suspicious.noul;
-
+  const { withinPolicy, matchesTicket, suspicious } = data;
   const probabilities = { withinPolicy, matchesTicket, suspicious };
 
   // Block checks first (most restrictive)
