@@ -108,6 +108,32 @@ export default function Home() {
         </div>
       </header>
 
+      <section className="hero">
+        <h1 className="hero-title">AEGIS</h1>
+        <div className="hero-scan-line" />
+        <p className="hero-subtitle">
+          The refund agent that gets attacked — and doesn&apos;t fall for it.
+        </p>
+        <div className="hero-grid">
+          <div className="hero-cell">
+            <span className="hero-icon">⚙</span>
+            <span className="hero-label">Verifies orders</span>
+          </div>
+          <div className="hero-cell">
+            <span className="hero-icon">◉</span>
+            <span className="hero-label">Checks risk</span>
+          </div>
+          <div className="hero-cell">
+            <span className="hero-icon">⛊</span>
+            <span className="hero-label">Refuses manipulation</span>
+          </div>
+          <div className="hero-cell">
+            <span className="hero-icon">✕</span>
+            <span className="hero-label">Blocks refunds</span>
+          </div>
+        </div>
+      </section>
+
       <div className="input-area">
         <div className="input-panel">
           <div className="input-row">
